@@ -1,11 +1,12 @@
 <!doctype html>
-<html class="no-js" lang="">
+<html>
 
 <head>
     <meta charset="utf-8">
     <title></title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta property="og:title" content="">
     <meta property="og:type" content="">
@@ -16,39 +17,56 @@
     <link rel="apple-touch-icon" href="icon.png">
     <!-- Place favicon.ico in the root directory -->
 
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/main.css">
-
-    <meta name="theme-color" content="#fafafa">
-
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css' rel='stylesheet'/>
 
-    <style type="text/css">
-        html, body {
-            height: 100%;
-        }
-
+    <style>
         body {
             margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 
 <body>
 
-<!-- Add your site or application content here -->
-<script src="js/vendor/modernizr-3.11.2.min.js"></script>
-<script src="js/plugins.js"></script>
-<script src="js/main.js"></script>
+<style>
+    #menu {
+        position: absolute;
+        background: #fff;
+        padding: 10px;
+        font-family: 'Open Sans', sans-serif;
+    }
+</style>
 
-<div>
-    <input type="range" id="volume" name="volume"
-           min="0" max="11">
-    <label for="volume">Volume</label>
+<div id='map'></div>
+<div id="menu">
+    <input
+            id="ckjlf5lgf0uql19phwrf8e4wh"
+            type="radio"
+            name="rtoggle"
+            value="streets"
+            checked="checked"
+    />
+    <label for="ckjlf5lgf0uql19phwrf8e4wh">500</label>
+    <input id="ckjvdetel0jcj19nwvyi9idtz" type="radio" name="rtoggle" value="light"/>
+    <label for="ckjvdetel0jcj19nwvyi9idtz">1000</label>
+    <input id="ckjve4idc0eno1apezz12qv5o" type="radio" name="rtoggle" value="dark"/>
+    <label for="ckjve4idc0eno1apezz12qv5o">1500</label>
+    <input id="ckjvf4wfy0l3x19nzugqbxc1q" type="radio" name="rtoggle" value="outdoors"/>
+    <label for="ckjvf4wfy0l3x19nzugqbxc1q">2000</label>
+    <input id="ckjvfye6f0lsz19o5ilk05b90" type="radio" name="rtoggle" value="satellite"/>
+    <label for="ckjvfye6f0lsz19o5ilk05b90">2500</label>
+    <input id="ckjvgnh0h0mhx19nygcxrzcrr" type="radio" name="rtoggle" value="satellite"/>
+    <label for="ckjvgnh0h0mhx19nygcxrzcrr">3000</label>
 </div>
-
-<div id='map' style='width: 100%; height: 100%;'></div>
 
 <script>
     // TO MAKE THE MAP APPEAR YOU MUST
@@ -57,14 +75,7 @@
     mapboxgl.accessToken = 'pk.eyJ1IjoibmVoZW1pYWhhcmNoaXZlIiwiYSI6ImNramp6OXN2bDF0OGgyeHRnMjB6ZmdianYifQ.ixrqFAV8JKIMyO5Pz8cvJw';
     var map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/nehemiaharchive/ckjlf5lgf0uql19phwrf8e4wh',    //500
-        //      mapbox://styles/nehemiaharchive/ckjvdetel0jcj19nwvyi9idtz      //1000
-        //      mapbox://styles/nehemiaharchive/ckjve4idc0eno1apezz12qv5o      //1500
-        //      mapbox://styles/nehemiaharchive/ckjvf4wfy0l3x19nzugqbxc1q      //2000
-        //      mapbox://styles/nehemiaharchive/ckjvfye6f0lsz19o5ilk05b90      //2500
-        //      mapbox://styles/nehemiaharchive/ckjvgnh0h0mhx19nygcxrzcrr      //3000
-
-        //style: 'mapbox://styles/mapbox/dark-v10', // stylesheet location
+        style: 'mapbox://styles/nehemiaharchive/ckjlf5lgf0uql19phwrf8e4wh',
         center: [138, 36], // starting position [lng, lat]
         minZoom: 3,
         zoom: 5 // starting zoom
@@ -72,8 +83,6 @@
 
     map.on('load', function () {
         map.resize();
-
-        //source();
     });
 
     cameraPosition();
@@ -94,11 +103,16 @@
         map.setFreeCameraOptions(camera);
     }
 
-    function source() {
-        map.addSource('some id', {
-            type: 'geojson',
-            data: 'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_10m_ports.geojson'
-        });
+    var layerList = document.getElementById('menu');
+    var inputs = layerList.getElementsByTagName('input');
+
+    function switchLayer(layer) {
+        var layerId = layer.target.id;
+        map.setStyle('mapbox://styles/nehemiaharchive/' + layerId);
+    }
+
+    for (var i = 0; i < inputs.length; i++) {
+        inputs[i].onclick = switchLayer;
     }
 </script>
 
