@@ -40,32 +40,52 @@
 <style>
     #menu {
         position: absolute;
-        background: #fff;
+        background: #000;
+        color:#fff;
         padding: 10px;
+        opacity: 0.6;
         font-family: 'Open Sans', sans-serif;
+        font-size: 13px;
+    }
+    ul { 
+    	list-style: none; 
+    	padding: 0px;
+    	margin: 0px;
     }
 </style>
 
 <div id='map'></div>
 <div id="menu">
-    <input
-            id="ckjlf5lgf0uql19phwrf8e4wh"
-            type="radio"
-            name="rtoggle"
-            value="streets"
-            checked="checked"
-    />
-    <label for="ckjlf5lgf0uql19phwrf8e4wh">500</label>
-    <input id="ckjvdetel0jcj19nwvyi9idtz" type="radio" name="rtoggle" value="light"/>
-    <label for="ckjvdetel0jcj19nwvyi9idtz">1000</label>
-    <input id="ckjve4idc0eno1apezz12qv5o" type="radio" name="rtoggle" value="dark"/>
-    <label for="ckjve4idc0eno1apezz12qv5o">1500</label>
-    <input id="ckjvf4wfy0l3x19nzugqbxc1q" type="radio" name="rtoggle" value="outdoors"/>
-    <label for="ckjvf4wfy0l3x19nzugqbxc1q">2000</label>
-    <input id="ckjvfye6f0lsz19o5ilk05b90" type="radio" name="rtoggle" value="satellite"/>
-    <label for="ckjvfye6f0lsz19o5ilk05b90">2500</label>
-    <input id="ckjvgnh0h0mhx19nygcxrzcrr" type="radio" name="rtoggle" value="satellite"/>
-    <label for="ckjvgnh0h0mhx19nygcxrzcrr">3000</label>
+
+	<span>CT教会と駅</span>
+
+ 	<ul>
+	    <li><input
+	            id="ckjlf5lgf0uql19phwrf8e4wh"
+	            type="radio"
+	            name="rtoggle"
+	            value="streets"
+	            checked="checked"
+	    />
+	    <label for="ckjlf5lgf0uql19phwrf8e4wh">500m</label></li>
+
+	    <li><input id="ckjvdetel0jcj19nwvyi9idtz" type="radio" name="rtoggle" value="light"/>
+	    <label for="ckjvdetel0jcj19nwvyi9idtz">1000m</label></li>
+
+
+	    <li><input id="ckjve4idc0eno1apezz12qv5o" type="radio" name="rtoggle" value="dark"/>
+	    <label for="ckjve4idc0eno1apezz12qv5o">1500m</label></li>
+
+	    <li><input id="ckjvf4wfy0l3x19nzugqbxc1q" type="radio" name="rtoggle" value="outdoors"/>
+	    <label for="ckjvf4wfy0l3x19nzugqbxc1q">2000m</label></li>
+
+	    <li><input id="ckjvfye6f0lsz19o5ilk05b90" type="radio" name="rtoggle" value="satellite"/>
+	    <label for="ckjvfye6f0lsz19o5ilk05b90">2500m</label></li>
+
+	    <li><input id="ckjvgnh0h0mhx19nygcxrzcrr" type="radio" name="rtoggle" value="satellite"/>
+	    <label for="ckjvgnh0h0mhx19nygcxrzcrr">3000m</label></li>
+
+	</ul>
 </div>
 
 <script>
