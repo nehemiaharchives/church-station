@@ -6,6 +6,8 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.css" rel="stylesheet"/>
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-language/v0.10.1/mapbox-gl-language.js'></script>
     <style>
         body {
             margin: 0;
@@ -18,18 +20,42 @@
             bottom: 0;
             width: 100%;
         }
+
+        #buttons {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .button {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            width: 100px;
+            padding: 8px;
+            border-radius: 3px;
+            margin-top: 10px;
+            font-size: 12px;
+            text-align: center;
+            color: #fff;
+            background: #000;
+            font-family: sans-serif;
+            font-weight: bold;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
 <div id="map"></div>
+<ul class="language" id="buttons">
+    <li id='button-ja' class='button'>日本語</li>
+    <li id='button-ko' class='button'>한국어</li>
+    <li id='button-en' class='button'>English</li>
+</ul>
 <script>
-    // TO MAKE THE MAP APPEAR YOU MUST
-    // ADD YOUR ACCESS TOKEN FROM
-    // https://account.mapbox.com
     mapboxgl.accessToken = 'pk.eyJ1IjoibmVoZW1pYWhhcmNoaXZlIiwiYSI6ImNramp6OXN2bDF0OGgyeHRnMjB6ZmdianYifQ.ixrqFAV8JKIMyO5Pz8cvJw';
     var map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11',
+        style: 'mapbox://styles/mapbox/dark-v9',
         center: [138, 36],
         zoom: 5,
         pitch: 40,
@@ -37,10 +63,31 @@
         antialias: true
     });
 
+    var mapboxLanguage = new MapboxLanguage();
+    map.addControl(mapboxLanguage);
+
     map.on('load', function () {
+        map.addSource("mapbox-transit", {
+            "url": "mapbox://mapbox.transit-v2",
+            "type": "vector"
+        });
+        map.addLayer({
+            "id": "transit_line_line",
+            "source": "mapbox-transit",
+            "source-layer": "transit_line",
+            "type": "line",
+            "filter": [
+                "==",
+                "$type",
+                "LineString"
+            ],
+            "paint": {
+                "line-width": 2,
+                "line-color": "rgba(66,100,251, 0.3)"
+            }
+        });
+
         map.addSource('500-station-polygon-without-church', {
-// GeoJSON Data source used in vector tiles, documented at
-// https://gist.github.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d
             'type': 'geojson',
             'data':
                 'https://raw.githubusercontent.com/nehemiaharchives/cpsd/master/data/japan/500-station-polygon-without-church.json'
@@ -50,19 +97,16 @@
             'type': 'fill-extrusion',
             'source': '500-station-polygon-without-church',
             'paint': {
-// See the Mapbox Style Specification for details on data expressions.
-// https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions
-
-// Get the fill-extrusion-color from the source 'color' property.
                 'fill-extrusion-color': "#53d8fd",
-
-// Get fill-extrusion-height from the source 'height' property.
                 'fill-extrusion-height': ["*", ["sqrt", ['get', 'passengers']], 10],
-
-// Make extrusions slightly opaque for see through indoor walls.
                 'fill-extrusion-opacity': 0.53
             }
         });
+    });
+
+    document.getElementById('buttons').addEventListener('click', function (event) {
+        var language = event.target.id.substr('button-'.length);
+        map.setStyle(mapboxLanguage.setLanguage(map.getStyle(), language));
     });
 </script>
 </body>
