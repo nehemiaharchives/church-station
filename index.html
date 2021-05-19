@@ -205,6 +205,7 @@
     var browserLocale = detectBrowserLocale();
     var labels = layerList.getElementsByTagName("label");
 
+    // localization for distance unit widely used only in United States
     if (browserLocale === "en-US") {
         console.log("browser locale is en-US");
         for (var i = 0; i < labels.length; i++) {
@@ -219,16 +220,41 @@
 
     switchLanguage(detectedBrowserLanguage);
 
+    // default variables for vertical viewports
+    var mapPitch = 40;
+    var mapBearing = 10;
+    var mapBoundary = [
+        [144, 44], // hokkaido, north east corner of Japan
+        [128, 28] // okinawa, south west corner of Japan
+    ];
+
+    if(window.innerWidth > window.innerHeight){
+        console.log("viewport is horizontal, fit pitch and bearing");
+        mapPitch = 60;
+        mapBearing = -40;
+        mapBoundary = [
+            [142, 42],
+            [132, 32]
+        ];
+    }else{
+        console.log("viewport is vertical, keep current pitch and bearing")
+    }
+
     mapboxgl.accessToken = 'pk.eyJ1IjoibmVoZW1pYWhhcmNoaXZlIiwiYSI6ImNramp6OXN2bDF0OGgyeHRnMjB6ZmdianYifQ.ixrqFAV8JKIMyO5Pz8cvJw';
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/light-v10', //streets-v11 //dark-v9
-        center: [138, 36],
-        zoom: 5.5,
-        pitch: 60,
-        bearing: -40,
+        //center: [138, 36],
+        //zoom: 5.5,
+        pitch: mapPitch,
         antialias: true,
         attributionControl: false
+    });
+
+    map.fitBounds(mapBoundary);
+
+    map.jumpTo({
+        bearing: mapBearing
     });
 
     var mapboxLanguage = new MapboxLanguage();
