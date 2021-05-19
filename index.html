@@ -35,11 +35,15 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-2400048-12"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
 
-      gtag('config', 'UA-2400048-12');
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-2400048-12');
     </script>
 
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.0.1/mapbox-gl.js"></script>
@@ -114,7 +118,7 @@
 </head>
 
 <body>
-<div id="map"></div>
+<div id="map">
 <div id="menu">
 
     <a href="https://www.christiantoday.co.jp">
@@ -154,6 +158,8 @@
         <li id='button-en' class='button'>English</li>
     </ul>
 </div>
+</div>
+
 
 <script>
     var layerList = document.getElementById('menu');
@@ -221,22 +227,22 @@
     switchLanguage(detectedBrowserLanguage);
 
     // default variables for vertical viewports
-    var mapPitch = 40;
-    var mapBearing = 10;
+    var mapPitch = 60;
+    var mapBearing = 30;
     var mapBoundary = [
-        [144, 44], // hokkaido, north east corner of Japan
-        [128, 28] // okinawa, south west corner of Japan
+        [129, 29], // okinawa, south west corner of Japan
+        [138, 38] // hokkaido, north east corner of Japan
     ];
 
-    if(window.innerWidth > window.innerHeight){
+    if (window.innerWidth > window.innerHeight) {
         console.log("viewport is horizontal, fit pitch and bearing");
         mapPitch = 60;
         mapBearing = -40;
         mapBoundary = [
-            [142, 42],
-            [132, 32]
+            [132, 32],
+            [142, 42]
         ];
-    }else{
+    } else {
         console.log("viewport is vertical, keep current pitch and bearing")
     }
 
@@ -244,18 +250,14 @@
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/light-v10', //streets-v11 //dark-v9
-        //center: [138, 36],
-        //zoom: 5.5,
+        center: [138, 36],
+        zoom: 5.5,
         pitch: mapPitch,
         antialias: true,
         attributionControl: false
     });
 
     map.fitBounds(mapBoundary);
-
-    map.jumpTo({
-        bearing: mapBearing
-    });
 
     var mapboxLanguage = new MapboxLanguage();
     map.addControl(mapboxLanguage);
@@ -265,6 +267,11 @@
     const base_url = 'https://raw.githubusercontent.com/nehemiaharchives/cpsd/master/data/japan/';
 
     map.on('load', function () {
+
+        map.easeTo({
+            bearing: mapBearing,
+            duration: 5000
+        });
 
         if (detectedBrowserLanguage != "en") {
             console.log("browser language is not English, switching to browser language");
@@ -277,6 +284,8 @@
         }));
 
         map.addControl(new mapboxgl.NavigationControl());
+
+        map.addControl(new mapboxgl.FullscreenControl());
 
         map.addSource('all-church', {
             'type': 'geojson',
