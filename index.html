@@ -302,11 +302,11 @@
             filter: ["==", "stop_type", "station"]
         })
 
-        setChurchStation(500);
+        renderChurchesAndStations(500);
 
     });
 
-    function setChurchStation(distanceToShow) {
+    function renderChurchesAndStations(distanceToShow) {
 
         if (map.getLayer("500-station-polygon-without-church") === undefined) {
             console.log("default layer not found, nothing to un-hide, initial loading");
@@ -436,7 +436,7 @@
     function switchLayer(layer) {
         var layerId = layer.target.id;
         console.log("calling setChurchStation with " + layerId);
-        setChurchStation(layerId);
+        renderChurchesAndStations(layerId);
     }
 
     var inputs = layerList.getElementsByTagName('input');
