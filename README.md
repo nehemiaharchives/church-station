@@ -11,6 +11,7 @@ so that those who in charge of making mission strategy can be free from language
 Those who support mission by prayer, giving, or training can also benefit from the project learning visually learning unreached area in Japan.
 
 Distance from stations to Churches can be switched from 500m to 3km. (Elderly gets tired with shorter walk while younger feels fine walking longer.)
+The application reads your browser language. When it detects ```en-US```, the distance unit will be transformed into miles.
 
 ## Why train stations?
 [Rail transport in Japan](https://en.wikipedia.org/wiki/Rail_transport_in_Japan) is advanced compared to many countries.
