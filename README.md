@@ -22,3 +22,7 @@ People use train to visit churches in most cities in Japan.
 * **Blue dots:** same as above when seen in zoom out view where height of the bar gets unrecognizable.
 * **Orange graph and dots connected each other:** Church & Station pairs within the specified range.
 * **Orange dots:** Churches including ones outside of the specified range.
+
+## Data Source
+Geographic data of train stations in Japan was obtained from [Ministry of Land, Infrastructure, Transport and Tourism](https://www.mlit.go.jp/en/).
+Church data is gathered by Christian Today Japan. Distance data is computed at [cpsd: church planting strategy database](https://github.com/nehemiaharchives/cpsd).
