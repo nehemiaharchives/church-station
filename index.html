@@ -115,6 +115,26 @@
         .tooltip:hover #tooltiptext {
             visibility: visible;
         }
+
+        .atribution #miltatribution {
+            visibility: hidden;
+            /*width: 300px;*/
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 5px;
+
+            /* Position the tooltip */
+            position: absolute;
+            z-index: 1;
+            bottom: 12px;
+            left: 1px;
+        }
+
+        .atribution:hover #miltatribution {
+            visibility: visible;
+        }
     </style>
 
 </head>
@@ -187,25 +207,29 @@
         var titleText = document.getElementById('title-text');
         var logo = document.getElementById('logo');
         var toolTip = document.getElementById('tooltiptext');
-
+        var miltAttribution = document.getElementById('miltatribution');
+        
         switch (languageToSwitch) {
             case 'ja':
                 titleText.innerText = "教会と駅";
                 logo.setAttribute("title", "クリスチャントゥデイ");
                 document.title = "教会と駅 : インフォグラフィックス : クリスチャントゥデイ";
                 toolTip.innerText = "１日あたり乗降者数１０００人以上で、教会が指定した範囲にない駅を青の四角柱で、ある駅をオレンジの四角柱で表示しています。四角柱の高さは乗降者数を表しています。";
+                miltAttribution.innerText = "国土交通省国土数値情報駅別乗降客数データを加工して作成";
                 break;
             case 'ko':
                 titleText.innerText = "교회와역";
                 logo.setAttribute("title", "일본크리스천투데이");
                 document.title = "교회와역 : 인포그래픽 : 일본크리스천투데이"
                 toolTip.innerText = "하루 승강 자수 1000 명 이상 교회가 지정한 범위에없는 역을 파란색 사각형 기둥에있는 역 오렌지색 직사각형 기둥으로 표시하고 있습니다. 사각 기둥의 높이가 승강 인원을 나타냅니다.";
+                miltAttribution.innerText = "일본 정부 국토 교통성 국토 수치 정보 역 별 승강 객수 데이터를 가공하여 만든";
                 break;
             case 'en':
                 titleText.innerHTML = "Church<br><span>&</span><br>Station"
                 logo.setAttribute("title", "Christian Today Japan");
                 document.title = "Churches and Stations : Infographics : Christian Today Japan"
                 toolTip.innerText = "Stations with more than 1000 passengers per day without church(es) in the specified distance are represented as blue square pillars, stations with churches are in orange. Heights are the number of passengers.";
+                miltAttribution.innerText = "Station Data powered by National Land Information Division, National Spatial Planning and Regional Policy Bureau, Ministry of Land, Infrastructure and Tourism of Japan";
                 break;
         }
     }
@@ -226,7 +250,7 @@
     var detectedBrowserLanguage = detectBrowserLanguage(browserLocale);
     console.log("browser language is " + detectedBrowserLanguage);
 
-    switchLanguage(detectedBrowserLanguage);
+    
 
     // default variables for vertical viewports
     var mapPitch = 60;
@@ -282,7 +306,10 @@
 
         map.addControl(new mapboxgl.AttributionControl({
             compact: false,
-            customAttribution: ["<a href=\"https://www.christiantoday.co.jp/\">© Christian Today Japan</a>"]
+            customAttribution: [
+                "<a href=\"https://www.christiantoday.co.jp/\">© Christian Today Japan</a>",
+                "<span class=\"atribution\"><a href=\"https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-S12-v2_3.html\" target=\"_blank\" >© MLIT of Japan</a><span id=\"miltatribution\"></span></div>"
+            ]
         }));
 
         map.addControl(new mapboxgl.NavigationControl());
@@ -338,6 +365,8 @@
             },
             filter: ["==", "stop_type", "station"]
         })
+
+        switchLanguage(detectedBrowserLanguage);
 
         renderChurchesAndStations(500);
 
