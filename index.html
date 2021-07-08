@@ -245,10 +245,23 @@
     var detectedBrowserLanguage = detectBrowserLanguage(browserLocale);
     console.log("browser language is " + detectedBrowserLanguage);
 
+    let hash = window.location.hash;
     var hasHash = false;
 
-    if (window.location.hash) {
+    var walkingDistanceInHash = 500;
+    var needsToAddHashWalkingDistanceParameter = true;
+
+    if (hash) {
         hasHash = true;
+        if (hash.includes("&wd=")) {
+            walkingDistanceInHash = parseInt(hash.split("&wd=")[1]);
+            console.log("hash found and custom walking distance detected as " + walkingDistanceInHash);
+            needsToAddHashWalkingDistanceParameter = true;
+        } else {
+            console.log("hash found but custom walking distance NOT detected, defaults to " + walkingDistanceInHash);
+        }
+    } else {
+        console.log("hash NOT found walking distance defaults to " + walkingDistanceInHash);
     }
 
     // default variables for vertical viewports
@@ -280,15 +293,15 @@
         pitch: mapPitch,
         antialias: true,
         attributionControl: false,
-        hash: true
+        hash: "map"
     });
 
     let hashinoriginalurl = window.location.hash
 
     if (hasHash) {
-        console.log("Fragment exists, do not fit bounds " + hashinoriginalurl);
+        console.log("Hash fragment exists, do not fit bounds " + hashinoriginalurl);
     } else {
-        console.log("Fragment doesn't exist, fit bounds to default " + hashinoriginalurl);
+        console.log("Hash fragment doesn't exist, fit bounds to default " + hashinoriginalurl);
         map.fitBounds(mapBoundary);
     }
 
@@ -302,9 +315,9 @@
     map.on('load', function () {
 
         if (hasHash) {
-            console.log("Fragment exists, do not ease");
+            console.log("Hash fragment exists, do not ease");
         } else {
-            console.log("Fragment doesn't exist, ease to default");
+            console.log("Hash fragment doesn't exist, ease to default");
             map.easeTo({
                 bearing: mapBearing,
                 duration: 5000
@@ -380,16 +393,30 @@
 
         switchLanguage(detectedBrowserLanguage);
 
-        renderChurchesAndStations(500);
-
+        if(needsToAddHashWalkingDistanceParameter){
+            let hashToBeReplaced = window.location.hash + "&wd=" + walkingDistanceInHash;
+            history.replaceState(undefined, undefined, hashToBeReplaced)
+        }
+        renderChurchesAndStations(walkingDistanceInHash);
     });
 
     function renderChurchesAndStations(distanceToShow) {
+        let hashHead = window.location.hash.split("&wd=")[0];
+        history.replaceState(undefined, undefined, `${hashHead}&wd=${distanceToShow.toString()}`);
 
-        if (map.getLayer("500-station-polygon-without-church") === undefined) {
+        if (map.getLayer(walkingDistanceInHash + "-station-polygon-without-church") === undefined) {
             console.log("default layer not found, nothing to un-hide, initial loading");
-            fetchGeoJson(500);
-            distanceToHide = 500;
+
+            if (walkingDistanceInHash != 500) {
+                console.log("default walking distance is NOT 500, switch checked input box to " + walkingDistanceInHash);
+                document.getElementById("500").checked = false;
+                document.getElementById(walkingDistanceInHash.toString()).checked = true;
+            } else {
+                console.log("default walking distance is 500, keep checked input box");
+            }
+
+            fetchGeoJson(walkingDistanceInHash);
+            distanceToHide = walkingDistanceInHash;
         } else {
 
             hideLayer(distanceToHide);
