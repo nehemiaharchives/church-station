@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>教会と駅 : インフォグラフィックス : クリスチャントゥデイ</title>
+    <title>教会と駅ー未伝道地が見える宣教地図 : インフォグラフィックス : クリスチャントゥデイ</title>
     <meta name="description" content="「教会と駅」は、全国の教会が近くにない駅を可視化し、開拓宣教の候補地を考える際の参考情報を提供するために考案されたインターネット上の地図です。">
     <meta name="news_keywords" content="教会,開拓,開拓宣教,日本宣教,宣教学,宣教地図,GIS,駅,乗降者数,データジャーナリズム,キリスト教データジャーナリズム,クリスチャントゥデイ"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,14 +11,14 @@
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="クリスチャントゥデイ"/>
-    <meta property="og:title" content="教会と駅ークリスチャントゥデイ開発の開拓宣教支援ツール"/>
+    <meta property="og:title" content="教会と駅ー未伝道地が見える宣教地図：クリスチャントゥデイ"/>
     <meta property="og:url" content="https://www.christiantoday.co.jp/infographics/church-station/"/>
     <meta property="og:image" content="https://www.christiantoday.co.jp/infographics/church-station/social-card.jpg"/>
 
     <meta name="twitter:site" content="chtodayjp"/>
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:image" content="https://www.christiantoday.co.jp/infographics/church-station/social-card.jpg"/>
-    <meta property="twitter:title" content="教会と駅ークリスチャントゥデイ開発の開拓宣教支援ツール"/>
+    <meta property="twitter:title" content="教会と駅ー未伝道地が見える宣教地図：クリスチャントゥデイ"/>
 
     <meta property="syndication-source"
           content="https://www.christiantoday.co.jp/infographics/church-station/"/>
@@ -204,7 +204,7 @@
                 <title id="twitter-share-text"></title>
                 <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
             </svg>
-            <svg id="line-share" data-sharer="line"
+            <svg id="line-share" data-sharer="line" data-title=""
                  data-url="https://www.christiantoday.co.jp/infographics/church-station/#map=5.48/37.165/137/-40/60&wd=500"
                  role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <title id="line-share-text"></title>
@@ -251,32 +251,38 @@
             case 'ja':
                 titleText.innerText = "教会と駅";
                 logo.setAttribute("title", "クリスチャントゥデイ");
-                document.title = "教会と駅 : インフォグラフィックス : クリスチャントゥデイ";
+                let jaDesc = "教会と駅ー未伝道地が見える宣教地図";
+                document.title = jaDesc + " : インフォグラフィックス : クリスチャントゥデイ";
                 toolTip.innerText = "１日あたり乗降者数１０００人以上で、教会が指定した範囲にない駅を青の四角柱で、ある駅をオレンジの四角柱で表示しています。四角柱の高さは乗降者数を表しています。";
                 miltAttribution.innerText = "国土交通省国土数値情報駅別乗降客数データを加工して作成";
                 socialPlatforms.forEach(function (item, index) {
                     document.querySelector(`#${item}-share-text`).textContent = `${capitalize(item)}で共有`;
                 });
+                document.getElementById("line-share").setAttribute("data-title", jaDesc);
                 break;
             case 'ko':
                 titleText.innerText = "교회와역";
                 logo.setAttribute("title", "일본크리스천투데이");
-                document.title = "교회와역 : 인포그래픽 : 일본크리스천투데이"
+                let koDesc = "교회와역ー미전도 지역이 보이는 선교지도";
+                document.title = koDesc + " : 인포 그래픽 : 일본크리스천투데이";
                 toolTip.innerText = "하루 승강 자수 1000 명 이상 교회가 지정한 범위에없는 역을 파란색 사각형 기둥에있는 역 오렌지색 직사각형 기둥으로 표시하고 있습니다. 사각 기둥의 높이가 승강 인원을 나타냅니다.";
                 miltAttribution.innerText = "일본 정부 국토 교통성 국토 수치 정보 역 별 승강 객수 데이터를 가공하여 만든";
                 socialPlatforms.forEach(function (item, index) {
                     document.querySelector(`#${item}-share-text`).textContent = `${capitalize(item)}에서 공유`;
                 });
+                document.getElementById("line-share").setAttribute("data-title", koDesc);
                 break;
             case 'en':
                 titleText.innerHTML = "Church<br><span>&</span><br>Station"
                 logo.setAttribute("title", "Christian Today Japan");
-                document.title = "Churches and Stations : Infographics : Christian Today Japan"
+                let enDesc = "Church and Station - Mission Map Visualizing Unreached Area";
+                document.title = enDesc + " : Infographics : Christian Today Japan";
                 toolTip.innerText = "Stations with more than 1000 passengers per day without church(es) in the specified distance are represented as blue square pillars, stations with churches are in orange. Heights are the number of passengers.";
                 miltAttribution.innerText = "Station Data powered by National Land Information Division, National Spatial Planning and Regional Policy Bureau, Ministry of Land, Infrastructure and Tourism of Japan";
                 socialPlatforms.forEach(function (item, index) {
                     document.querySelector(`#${item}-share-text`).textContent = `Share with ${capitalize(item)}`;
                 });
+                document.getElementById("line-share").setAttribute("data-title", enDesc);
                 break;
         }
     }
