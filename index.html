@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>教会と駅 : インフォグラフィックス : クリスチャントゥデイ</title>
     <meta name="description" content="「教会と駅」は、全国の教会が近くにない駅を可視化し、開拓宣教の候補地を考える際の参考情報を提供するために考案されたインターネット上の地図です。">
-    <meta name="news_keywords" content="教会,開拓,開拓宣教,日本宣教,宣教学,宣教地図,GIS,駅,乗降者数,データジャーナリズム,キリスト教データジャーナリズム,クリスチャントゥデイ" />
+    <meta name="news_keywords" content="教会,開拓,開拓宣教,日本宣教,宣教学,宣教地図,GIS,駅,乗降者数,データジャーナリズム,キリスト教データジャーナリズム,クリスチャントゥデイ"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="fb:app_id" content="1625923791071391"/>
     <meta rel="canonical" href="https://www.christiantoday.co.jp/infographics/church-station/"/>
@@ -136,45 +136,45 @@
 
 <body>
 <div id="map">
-<div id="menu">
+    <div id="menu">
 
-    <a href="https://www.christiantoday.co.jp">
-        <img id="logo" src="https://www.christiantoday.co.jp/views/img/logo-small.png">
-    </a>
+        <a href="https://www.christiantoday.co.jp">
+            <img id="logo" src="https://www.christiantoday.co.jp/views/img/logo-small.png">
+        </a>
 
-    <h3>
-        <div id="title-text"></div>
-    </h3>
+        <h3>
+            <div id="title-text"></div>
+        </h3>
 
-    <div class="tooltip">
-        <ul>
-            <li><input id="500" type="radio" name="rtoggle" value="streets" checked="checked"/>
-                <label for="500">500m</label></li>
+        <div class="tooltip">
+            <ul>
+                <li><input id="500" type="radio" name="rtoggle" value="streets" checked="checked"/>
+                    <label for="500">500m</label></li>
 
-            <li><input id="1000" type="radio" name="rtoggle" value="light"/>
-                <label for="1000">1000m</label></li>
+                <li><input id="1000" type="radio" name="rtoggle" value="light"/>
+                    <label for="1000">1000m</label></li>
 
-            <li><input id="1500" type="radio" name="rtoggle" value="dark"/>
-                <label for="1500">1500m</label></li>
+                <li><input id="1500" type="radio" name="rtoggle" value="dark"/>
+                    <label for="1500">1500m</label></li>
 
-            <li><input id="2000" type="radio" name="rtoggle" value="outdoors"/>
-                <label for="2000">2000m</label></li>
+                <li><input id="2000" type="radio" name="rtoggle" value="outdoors"/>
+                    <label for="2000">2000m</label></li>
 
-            <li><input id="2500" type="radio" name="rtoggle" value="satellite"/>
-                <label for="2500">2500m</label></li>
+                <li><input id="2500" type="radio" name="rtoggle" value="satellite"/>
+                    <label for="2500">2500m</label></li>
 
-            <li><input id="3000" type="radio" name="rtoggle" value="satellite"/>
-                <label for="3000">3000m</label></li>
+                <li><input id="3000" type="radio" name="rtoggle" value="satellite"/>
+                    <label for="3000">3000m</label></li>
+            </ul>
+            <span id="tooltiptext"></span>
+        </div>
+
+        <ul class="language" id="buttons">
+            <li id='button-ja' class='button'>日本語</li>
+            <li id='button-ko' class='button'>한국어</li>
+            <li id='button-en' class='button'>English</li>
         </ul>
-        <span id="tooltiptext"></span>
     </div>
-
-    <ul class="language" id="buttons">
-        <li id='button-ja' class='button'>日本語</li>
-        <li id='button-ko' class='button'>한국어</li>
-        <li id='button-en' class='button'>English</li>
-    </ul>
-</div>
 </div>
 
 
@@ -203,7 +203,7 @@
         var logo = document.getElementById('logo');
         var toolTip = document.getElementById('tooltiptext');
         var miltAttribution = document.getElementById('miltatribution');
-        
+
         switch (languageToSwitch) {
             case 'ja':
                 titleText.innerText = "教会と駅";
@@ -245,7 +245,11 @@
     var detectedBrowserLanguage = detectBrowserLanguage(browserLocale);
     console.log("browser language is " + detectedBrowserLanguage);
 
-    
+    var hasHash = false;
+
+    if (window.location.hash) {
+        hasHash = true;
+    }
 
     // default variables for vertical viewports
     var mapPitch = 60;
@@ -275,10 +279,18 @@
         zoom: 5.5,
         pitch: mapPitch,
         antialias: true,
-        attributionControl: false
+        attributionControl: false,
+        hash: true
     });
 
-    map.fitBounds(mapBoundary);
+    let hashinoriginalurl = window.location.hash
+
+    if (hasHash) {
+        console.log("Fragment exists, do not fit bounds " + hashinoriginalurl);
+    } else {
+        console.log("Fragment doesn't exist, fit bounds to default " + hashinoriginalurl);
+        map.fitBounds(mapBoundary);
+    }
 
     var mapboxLanguage = new MapboxLanguage();
     map.addControl(mapboxLanguage);
@@ -289,10 +301,15 @@
 
     map.on('load', function () {
 
-        map.easeTo({
-            bearing: mapBearing,
-            duration: 5000
-        });
+        if (hasHash) {
+            console.log("Fragment exists, do not ease");
+        } else {
+            console.log("Fragment doesn't exist, ease to default");
+            map.easeTo({
+                bearing: mapBearing,
+                duration: 5000
+            });
+        }
 
         if (detectedBrowserLanguage != "en") {
             console.log("browser language is not English, switching to browser language");
