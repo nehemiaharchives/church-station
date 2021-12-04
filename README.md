@@ -8,7 +8,7 @@ It is a single page web application with full screen map plotting churches and t
 
 It is available in languages spoken in 2 biggest missionary sending neighbour countries of Japan, English and Korean as well as Japanese 
 so that those who in charge of making mission strategy can be free from language barrier.
-Those who support mission by prayer, giving, or training can also benefit from the project learning visually learning unreached area in Japan.
+Those who support mission by prayer, giving, or training can also benefit from the project learning unreached area in Japan visually.
 
 Distance from stations to Churches can be switched from 500m to 3km. (Elderly gets tired with shorter walk while younger feels fine walking longer.)
 The application reads your browser language. When it detects ```en-US```, the distance unit will be transformed into miles.
