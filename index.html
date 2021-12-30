@@ -53,14 +53,6 @@
             padding: 0;
         }
 
-        img {
-            margin-top: 10px;
-        }
-
-        #title-text {
-            text-align: center;
-        }
-
         #map {
             position: absolute;
             top: 0;
@@ -69,6 +61,7 @@
             z-index: 1;
         }
 
+        /* menu start */
         #menu {
             position: absolute;
             background: #000;
@@ -80,19 +73,27 @@
             z-index: 2;
         }
 
-        ul {
+        img { /* CTJ Logo */
+            margin-top: 10px;
+        }
+
+        #title-text { /* Church & Station */
+            text-align: center;
+        }
+
+        ul { /* distance switcher */
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .button {
+        .button { /* language switcher */
             cursor: pointer;
             margin-top: 10px;
             margin-left: 10px;
         }
 
-        .tooltip #tooltiptext {
+        .tooltip #tooltiptext { /* user guide text */
             visibility: hidden;
             width: 120px;
             background-color: black;
@@ -112,6 +113,39 @@
             visibility: visible;
         }
 
+        /* social button start */
+        .social-share-buttons {
+            margin: 18px 0px 0px 4px;
+        }
+
+        svg {
+            display: inline-block;
+            justify-content: space-evenly;
+            height: 18px;
+        }
+
+        path {
+            fill: white;
+        }
+
+        /* social button end */
+
+        /* menu end */
+
+        #info {
+            top: 0;
+            right: 50px;
+            position: absolute;
+            background: #fff;
+            color: #000;
+            padding: 0 10px 0 10px;
+            opacity: 0.6;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 9px;
+            z-index: 2;
+        }
+
+        /* bottom bar start */
         .atribution #miltatribution {
             visibility: hidden;
             /*width: 300px;*/
@@ -132,19 +166,7 @@
             visibility: visible;
         }
 
-        .social-share-buttons {
-            margin: 18px 0px 0px 4px;
-        }
-
-        svg {
-            display: inline-block;
-            justify-content: space-evenly;
-            height: 18px;
-        }
-
-        path {
-            fill: white;
-        }
+        /* bottom bar end */
     </style>
 
 </head>
@@ -212,6 +234,14 @@
             </svg>
         </div>
     </div>
+    <div id="info">
+        <div>
+            <strong><span id="mesh-population-box-label"></span> </strong>
+            <strong>2010:</strong> <span id='2010'></span>
+            <strong>2025:</strong> <span id='2025'></span>
+            <strong>2040:</strong> <span id='2040'></span>
+        </div>
+    </div>
 </div>
 
 
@@ -246,6 +276,7 @@
         var logo = document.getElementById('logo');
         var toolTip = document.getElementById('tooltiptext');
         var miltAttribution = document.getElementById('miltatribution');
+        var meshPopulationBoxLabel = document.getElementById('mesh-population-box-label');
 
         switch (languageToSwitch) {
             case 'ja':
@@ -254,6 +285,7 @@
                 let jaDesc = "教会と駅ー未伝道地が見える宣教地図";
                 document.title = jaDesc + " : インフォグラフィックス : クリスチャントゥデイ";
                 toolTip.innerText = "１日あたり乗降者数１０００人以上で、教会が指定した範囲にない駅を青の四角柱で、ある駅をオレンジの四角柱で表示しています。四角柱の高さは乗降者数を表しています。";
+                meshPopulationBoxLabel.innerText = "100mメッシュ人口";
                 miltAttribution.innerText = "国土交通省国土数値情報駅別乗降客数データを加工して作成";
                 socialPlatforms.forEach(function (item, index) {
                     document.querySelector(`#${item}-share-text`).textContent = `${capitalize(item)}で共有`;
@@ -265,6 +297,7 @@
                 logo.setAttribute("title", "일본크리스천투데이");
                 let koDesc = "교회와역ー미전도 지역이 보이는 선교지도";
                 document.title = koDesc + " : 인포 그래픽 : 일본크리스천투데이";
+                meshPopulationBoxLabel.innerText = "100m메시 인구";
                 toolTip.innerText = "하루 승강 자수 1000 명 이상 교회가 지정한 범위에없는 역을 파란색 사각형 기둥에있는 역 오렌지색 직사각형 기둥으로 표시하고 있습니다. 사각 기둥의 높이가 승강 인원을 나타냅니다.";
                 miltAttribution.innerText = "일본 정부 국토 교통성 국토 수치 정보 역 별 승강 객수 데이터를 가공하여 만든";
                 socialPlatforms.forEach(function (item, index) {
@@ -277,6 +310,7 @@
                 logo.setAttribute("title", "Christian Today Japan");
                 let enDesc = "Church and Station - Mission Map Visualizing Unreached Area";
                 document.title = enDesc + " : Infographics : Christian Today Japan";
+                meshPopulationBoxLabel.innerText = "100m grid square population";
                 toolTip.innerText = "Stations with more than 1000 passengers per day without church(es) in the specified distance are represented as blue square pillars, stations with churches are in orange. Heights are the number of passengers.";
                 miltAttribution.innerText = "Station Data powered by National Land Information Division, National Spatial Planning and Regional Policy Bureau, Ministry of Land, Infrastructure and Tourism of Japan";
                 socialPlatforms.forEach(function (item, index) {
@@ -330,7 +364,6 @@
             console.log("Hash change detected. Updating social share uri to ", arguments[2]); // do something extra here; raise an event
 
             for (const platform of socialPlatforms) {
-                console.log(platform);
                 let shareButton = document.getElementById(`${platform}-share`);
                 var url = arguments[2];
                 if (!url.includes("http")) {
@@ -389,6 +422,8 @@
 
     const base_url = 'https://raw.githubusercontent.com/nehemiaharchives/cpsd/master/data/japan/';
 
+    const bottomLayerId = 'road-label';
+
     map.on('load', function () {
 
         if (hasHash) {
@@ -431,7 +466,7 @@
                 'circle-radius': 3,
                 'circle-opacity': 0.4
             }
-        });
+        }, bottomLayerId);
 
         map.addSource("mapbox-transit", {
             "url": "mapbox://mapbox.transit-v2",
@@ -461,7 +496,7 @@
                 url: 'mapbox://mapbox.mapbox-streets-v8'
             },
             'source-layer': 'transit_stop_label',
-            "minzoom": 12,
+            "minzoom": 11,
             layout: {
                 "text-field": ["coalesce", ["get", `name_${detectedBrowserLanguage}`], ["get", "name"]]
             },
@@ -510,6 +545,158 @@
 
             distanceToHide = distanceToShow;
         }
+        console.log("renderChurchesAndStations finished")
+
+        renderMeshPopulation(distanceToShow)
+
+        map.moveLayer("train_station_names")
+
+        let layers = map.getStyle().layers
+        console.log("all layers rendered")
+    }
+
+    const minZoomValue100mMeshPolygonLayer = 14;
+
+    function renderMeshPopulation(reach) {
+        if (typeof reach === 'string') {
+            reach = parseInt(reach);
+        }
+
+        let meshPopulationColor = ["case",
+            ["==", ['get', 'reach'], null], "#53d8fd",
+            ["<=", ['get', 'reach'], reach], "#fd853a",
+            "#53d8fd"];
+
+        if (map.getLayer('100m-mesh') === undefined) {
+            console.log("mesh layer not found, initial loading for reach:" + reach);
+
+            let meshPopulationYear = 2025;
+
+            map.addSource('100m-mesh', {
+                'type': 'vector',
+                'url': 'mapbox://nehemiaharchive.100m-mesh-population-reach'
+            });
+
+            map.addLayer({
+                'id': '100m-mesh',
+                'source': '100m-mesh',
+                'source-layer': '100m-mesh-population-reach',
+                "minzoom": minZoomValue100mMeshPolygonLayer,
+                'type': 'fill-extrusion',
+                'paint': {
+                    'fill-extrusion-color': meshPopulationColor,
+                    'fill-extrusion-height': ["*", ["sqrt", ['get', 'P' + meshPopulationYear + 'TT']], 10], //['get', 'P2010TT']
+                    'fill-extrusion-opacity': 0.4
+                }
+            }, bottomLayerId);
+
+            map.addSource('100m-mesh-points', {
+                'type': 'vector',
+                'url': 'mapbox://nehemiaharchive.100m-mesh-points-reach'
+            });
+
+            map.addLayer({
+                'id': '100m-mesh-points',
+                'source': '100m-mesh-points',
+                'source-layer': '100m-mesh-points-reach',
+                "maxzoom": 14,
+                "minzoom": 10,
+                'type': 'circle',
+                'paint': {
+                    'circle-color': meshPopulationColor,
+                    'circle-pitch-alignment': 'map',
+                    'circle-radius': [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        // zoom, radius
+                        10, 1.5,
+                        11, 2,
+                        12, 5,
+                        13, 7,
+                        14, 12
+                    ],
+                    'circle-opacity': [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        // zoom, opacity
+                        10, 0.2,
+                        11, 0.25,
+                        12, 0.3,
+                        13, 0.35,
+                        14, 0.4
+                    ]
+                }
+            }, bottomLayerId);
+
+            map.addSource('100m-mesh-points-summary', {
+                'type': 'vector',
+                'url': 'mapbox://nehemiaharchive.100m-mesh-population-summary'
+            });
+
+            let meshPopulationSummaryPaintProperty = {
+                'circle-color': meshPopulationColor,
+                'circle-pitch-alignment': 'map',
+                'circle-radius': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    // zoom, radius
+                    6, 1,
+                    7, 1.2,
+                    8, 1.4,
+                    9, 1.6,
+                    10, 1.8,
+                    11, 2
+                ],
+                'circle-opacity': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    // zoom, opacity
+                    6, 0.1,
+                    7, 0.12,
+                    8, 0.14,
+                    9, 0.16,
+                    10, 0.18,
+                    11, 0.2
+                ]
+            };
+            map.addLayer({
+                'id': '100m-mesh-points-summary',
+                'source': '100m-mesh-points-summary',
+                'source-layer': '100m-mesh-population-summary',
+                "maxzoom": 10,
+                "minzoom": 6,
+                'type': 'circle',
+                'paint': meshPopulationSummaryPaintProperty
+            }, bottomLayerId);
+
+            map.addSource('100m-mesh-points-999', {
+                'type': 'vector',
+                'url': 'mapbox://nehemiaharchive.100m-mesh-population-999'
+            });
+
+            map.addLayer({
+                'id': '100m-mesh-points-999',
+                'source': '100m-mesh-points-999',
+                'source-layer': '100m-mesh-population-999',
+                "maxzoom": 11,
+                "minzoom": 7,
+                'type': 'circle',
+                'paint': meshPopulationSummaryPaintProperty
+            }, bottomLayerId);
+
+        } else {
+            console.log("mesh layer found, setting layer paint properties for reach:" + reach);
+            map.setPaintProperty('100m-mesh', 'fill-extrusion-color', meshPopulationColor);
+            map.setPaintProperty('100m-mesh-points', 'circle-color', meshPopulationColor);
+            map.setPaintProperty('100m-mesh-points-summary', 'circle-color', meshPopulationColor);
+            map.setPaintProperty('100m-mesh-points-999', 'circle-color', meshPopulationColor);
+        }
+
+        console.log("renderMeshPopulation finished")
     }
 
     function fetchGeoJson(distance) {
@@ -519,6 +706,7 @@
             'type': 'geojson',
             'data': `${base_url}${distance}-station-polygon-without-church.json`
         });
+
         map.addLayer({
             'id': `${distance}-station-polygon-without-church`,
             'type': 'fill-extrusion',
@@ -528,7 +716,7 @@
                 'fill-extrusion-height': ["*", ["sqrt", ['get', 'passengers']], 10],
                 'fill-extrusion-opacity': 0.53
             }
-        });
+        }, bottomLayerId);
 
         //500-station-polygon-with-church.json
         map.addSource(`${distance}-station-polygon-with-church`, {
@@ -544,7 +732,7 @@
                 'fill-extrusion-height': ["*", ["sqrt", ['get', 'passengers']], 10],
                 'fill-extrusion-opacity': 0.53
             }
-        })
+        }, bottomLayerId)
 
         //500-route.json
         map.addSource(`${distance}-route`, {
@@ -560,7 +748,7 @@
                 'line-width': 2,
                 'line-opacity': 0.58
             }
-        });
+        }, bottomLayerId);
 
         //500-church.json
         map.addSource(`${distance}-church`, {
@@ -576,7 +764,7 @@
                 'circle-radius': 3,
                 'circle-opacity': 0.5
             }
-        });
+        }, bottomLayerId);
 
         //500-station-point-without-church.json
         map.addSource(`${distance}-station-point-without-church`, {
@@ -592,7 +780,7 @@
                 'circle-radius': 3,
                 'circle-opacity': 0.4
             }
-        })
+        }, bottomLayerId)
     }
 
     const layerPostFixList = [
@@ -617,14 +805,14 @@
 
     function switchLayer(layer) {
         var layerId = layer.target.id;
-        console.log("calling setChurchStation with " + layerId);
+        console.log("calling renderChurchesAndStations with " + layerId);
         renderChurchesAndStations(layerId);
     }
 
-    var inputs = layerList.getElementsByTagName('input');
+    var reachChangerInputCheckBoxes = layerList.getElementsByTagName('input');
 
-    for (var i = 0; i < inputs.length; i++) {
-        inputs[i].onclick = switchLayer;
+    for (var i = 0; i < reachChangerInputCheckBoxes.length; i++) {
+        reachChangerInputCheckBoxes[i].onclick = switchLayer;
     }
 
     document.getElementById('buttons').addEventListener('click', function (event) {
@@ -634,6 +822,58 @@
         map.setLayoutProperty('train_station_names', 'text-field', ["coalesce", ["get", `name_${targetLanguage}`], ["get", "name"]]);
 
         switchLanguage(targetLanguage);
+    });
+
+    // configure information box on the right top corner to show mesh population
+    map.on('zoom', () => {
+        let infoBox = document.getElementById('info')
+        if (map.getZoom() >= minZoomValue100mMeshPolygonLayer) {
+            infoBox.style.display = "block";
+        } else {
+            infoBox.style.display = "none";
+        }
+    });
+
+    let meshID = null;
+
+    map.on('mousemove', '100m-mesh', (event) => {
+        map.getCanvas().style.cursor = 'pointer';
+
+        const p2010TT = event.features[0].properties.P2010TT;
+        const p2025TT = event.features[0].properties.P2025TT;
+        const p2040TT = event.features[0].properties.P2040TT;
+
+        // Check whether features exist
+        if (event.features.length === 0) return;
+        // Display population in the sidebar
+        document.getElementById('2010').textContent = (Math.round(p2010TT * 10) / 10).toString();
+        document.getElementById('2025').textContent = (Math.round(p2025TT * 10) / 10).toString();
+        document.getElementById('2040').textContent = (Math.round(p2040TT * 10) / 10).toString();
+
+        // If meshID for the hovered feature is not null,
+        // use removeFeatureState to reset to the default behavior
+        if (meshID) {
+            map.removeFeatureState({
+                id: meshID,
+                source: '100m-mesh',
+                sourceLayer: '100m-mesh-population-reach'
+            });
+        }
+
+        meshID = event.features[0].id;
+
+        // When the mouse moves over the 100m-mesh layer, update the
+        // feature state for the feature under the mouse
+        map.setFeatureState(
+            {
+                id: meshID,
+                source: '100m-mesh',
+                sourceLayer: '100m-mesh-population-reach'
+            },
+            {
+                hover: true
+            }
+        );
     });
 
 </script>
