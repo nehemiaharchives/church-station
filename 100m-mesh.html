@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>教会と駅ー未伝道地が見える宣教地図 : インフォグラフィックス : クリスチャントゥデイ</title>
+    <meta name="description" content="「教会と駅」は、全国の教会が近くにない駅を可視化し、開拓宣教の候補地を考える際の参考情報を提供するために考案されたインターネット上の地図です。">
+    <meta name="news_keywords" content="教会,開拓,開拓宣教,日本宣教,宣教学,宣教地図,GIS,駅,乗降者数,データジャーナリズム,キリスト教データジャーナリズム,クリスチャントゥデイ"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="fb:app_id" content="1625923791071391"/>
+    <meta rel="canonical" href="https://www.christiantoday.co.jp/infographics/church-station/"/>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="クリスチャントゥデイ"/>
+    <meta property="og:title" content="教会と駅ー未伝道地が見える宣教地図：クリスチャントゥデイ"/>
+    <meta property="og:url" content="https://www.christiantoday.co.jp/infographics/church-station/"/>
+    <meta property="og:image" content="https://www.christiantoday.co.jp/infographics/church-station/social-card.jpg"/>
+    <meta name="twitter:site" content="chtodayjp"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:image" content="https://www.christiantoday.co.jp/infographics/church-station/social-card.jpg"/>
+    <meta property="twitter:title" content="教会と駅ー未伝道地が見える宣教地図：クリスチャントゥデイ"/>
+    <meta property="syndication-source" content="https://www.christiantoday.co.jp/infographics/church-station/"/>
+    <meta name="robots" content="index, follow"/>
+    <meta name="Googlebot-news" content="index, follow"/>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <!-- Global site tag (gtag.js) - Google Analytics
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-2400048-12"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-2400048-12');
+    </script>-->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet"/>
+    <!--<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-language/v0.10.1/mapbox-gl-language.js'></script>-->
+    <script src='mapbox-gl-language.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/sharer.js@latest/sharer.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            margin-top: 10px;
+        }
+
+        #title-text {
+            text-align: center;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        #menu {
+            position: absolute;
+            background: #000;
+            color: #fff;
+            padding: 10px 10px 20px 5px;
+            opacity: 0.6;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 13px;
+            z-index: 2;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .button {
+            cursor: pointer;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+<div id="map">
+    <div id="menu">
+        <a href="https://www.christiantoday.co.jp">
+            <img id="logo" src="https://www.christiantoday.co.jp/views/img/logo-small.png">
+        </a>
+        <h3>
+            <div id="title-text"></div>
+        </h3>
+        <ul class="language" id="buttons">
+            <li id='button-ja' class='button'>日本語</li>
+            <li id='button-ko' class='button'>한국어</li>
+            <li id='button-en' class='button'>English</li>
+        </ul>
+    </div>
+    <!--menu end-->
+</div>
+<!--map end-->
+
+<script>
+
+    // default variables for vertical viewports
+    var mapPitch = 60;
+    var mapBearing = 30;
+    var mapBoundary = [
+        [129, 29], // okinawa, south west corner of Japan
+        [138, 38] // hokkaido, north east corner of Japan
+    ];
+
+    if (window.innerWidth > window.innerHeight) {
+        console.log("viewport is horizontal, fit pitch and bearing");
+        mapPitch = 60;
+        mapBearing = -40;
+        mapBoundary = [
+            [132, 32],
+            [142, 42]
+        ];
+    } else {
+        console.log("viewport is vertical, keep current pitch and bearing")
+    }
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoibmVoZW1pYWhhcmNoaXZlIiwiYSI6ImNramp6OXN2bDF0OGgyeHRnMjB6ZmdianYifQ.ixrqFAV8JKIMyO5Pz8cvJw';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/light-v10', //streets-v11 //dark-v9
+        center: [138, 36],
+        zoom: 5.5,
+        pitch: mapPitch,
+        antialias: true,
+        attributionControl: false,
+        hash: "map"
+    });
+
+    map.on('load', function () {
+
+        map.addControl(new mapboxgl.NavigationControl());
+
+        map.addControl(new mapboxgl.FullscreenControl());
+
+        //start mesh
+
+        let reach = 500;
+        let meshPopulationYear = 2010;
+
+        let populationMeshColor = ["case",
+            ["==", ['get', 'reach'], null], "#53d8fd",
+            ["<=", ['get', 'reach'], reach], "#fd853a",
+            "#53d8fd"]; //orange:"#fd853a", blue: "#53d8fd"
+
+        map.addSource('100m-mesh', {
+            'type': 'vector',
+            'url': 'mapbox://nehemiaharchive.100m-mesh-population-reach'
+        });
+
+        map.addLayer({
+            'id': '100m-mesh',
+            'source': '100m-mesh',
+            'source-layer': '100m-mesh-population-reach',
+            "minzoom": 14,
+            'type': 'fill-extrusion',
+            'paint': {
+                'fill-extrusion-color': populationMeshColor,
+                'fill-extrusion-height': ["*", ["sqrt", ['get', 'P' + meshPopulationYear + 'TT']], 10], //['get', 'P2010TT']
+                'fill-extrusion-opacity': 0.4
+            }
+        });
+
+        map.addSource('100m-mesh-points', {
+            'type': 'vector',
+            'url': 'mapbox://nehemiaharchive.100m-mesh-points-reach'
+        });
+
+        map.addLayer({
+            'id': '100m-mesh-points',
+            'source': '100m-mesh-points',
+            'source-layer': '100m-mesh-points-reach',
+            "maxzoom": 14,
+            "minzoom": 10,
+            'type': 'circle',
+            'paint': {
+                'circle-color': populationMeshColor, //orange:"#fd853a", blue: "#53d8fd"
+                'circle-pitch-alignment': 'map',
+                'circle-radius': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    10, // zoom
+                    1.5, // radius
+                    11, // zoom
+                    2, // radius
+                    12, // zoom
+                    5, // radius
+                    13, // zoom
+                    7, // radius
+                    14, // zoom
+                    12 // radius
+                ],
+                'circle-opacity': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    10, // zoom
+                    0.39, // radius
+                    11, // zoom
+                    0.37, // radius
+                    12, // zoom
+                    0.35, // radius
+                    13, // zoom
+                    0.33, // radius
+                    14, // zoom
+                    0.31 // radius
+                ]
+            }
+        });
+
+        //end mesh
+
+    });
+
+</script>
+
+</body>
+
+</html>
