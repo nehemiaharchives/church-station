@@ -825,13 +825,20 @@
     });
 
     // configure information box on the right top corner to show mesh population
-    map.on('zoom', () => {
+    function showOrHideMeshPopulationBox() {
         let infoBox = document.getElementById('info')
         if (map.getZoom() >= minZoomValue100mMeshPolygonLayer) {
             infoBox.style.display = "block";
         } else {
             infoBox.style.display = "none";
         }
+    }
+
+    // for initial loading in case shared by link
+    showOrHideMeshPopulationBox();
+
+    map.on('zoom', () => {
+        showOrHideMeshPopulationBox();
     });
 
     let meshID = null;
