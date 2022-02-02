@@ -456,6 +456,84 @@
 
         map.addControl(new mapboxgl.FullscreenControl());
 
+        map.addSource('1000m-mesh', {
+            'type': 'vector',
+            'url': 'mapbox://nehemiaharchive.1000m-mesh-points'
+        });
+
+        map.addLayer({
+            'id': '1000m-mesh',
+            'source': '1000m-mesh',
+            'source-layer': '1000m-mesh-points',
+            "minzoom": 3,
+            "maxzoom": 9,
+            'type': 'circle',
+            'paint': {
+                'circle-color': "#53d8fd",
+                'circle-pitch-alignment': 'map',
+                'circle-radius': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    // zoom, radius
+                    6, 1,
+                    7, 1.5,
+                    8, 2.5,
+                    9, 3
+                ],
+                'circle-opacity': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    // zoom, opacity
+                    6, 0.5,
+                    7, 0.4,
+                    7.99, 0.15,
+                    8, 0.1,
+                    9, 0.1
+                ]
+            }
+        }, bottomLayerId);
+
+        map.addSource('500m-mesh', {
+            'type': 'vector',
+            'url': 'mapbox://nehemiaharchive.500m-mesh-points'
+        });
+
+        map.addLayer({
+            'id': '500m-mesh',
+            'source': '500m-mesh',
+            'source-layer': '500m-mesh-points',
+            "minzoom": 8,
+            "maxzoom": 11,
+            'type': 'circle',
+            'paint': {
+                'circle-color': "#53d8fd",
+                'circle-pitch-alignment': 'map',
+                'circle-radius': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    // zoom, radius
+                    8, 3,
+                    9, 4,
+                    10, 6,
+                    11, 7
+                ],
+                'circle-opacity': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    // zoom, opacity
+                    8, 0.1,
+                    9, 0.12,
+                    10, 0.13,
+                    10.5, 0.14,
+                    11, 0.1
+                ]
+            }
+        }, bottomLayerId);
+
         map.addSource('all-church', {
             'type': 'geojson',
             'data': `${base_url}all-church.json`
@@ -466,8 +544,30 @@
             'source': 'all-church',
             'paint': {
                 'circle-color': '#f89c2a',
-                'circle-radius': 3,
-                'circle-opacity': 0.4
+                'circle-pitch-alignment': 'map',
+                'circle-radius': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    // zoom, radius
+                    8, 3,
+                    10, 5,
+                    12, 7,
+                    14, 9,
+                    16, 11,
+                    18, 13
+                ],
+                'circle-opacity': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    // zoom, opacity
+                    8, 0.4,
+                    9, 0.5,
+                    14, 0.6,
+                    16, 0.8,
+                    18, 1
+                ]
             }
         }, bottomLayerId);
 
@@ -486,7 +586,18 @@
                 "LineString"
             ],
             "paint": {
-                "line-width": 2,
+                "line-width": [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    // zoom, radius
+                    9, 2,
+                    11, 2.5,
+                    13, 3,
+                    15, 3.5,
+                    17, 5,
+                    19, 7
+                ],
                 "line-color": "rgba(66,100,251, 0.3)"
             }
         });
@@ -602,8 +713,8 @@
                 'id': '100m-mesh-points',
                 'source': '100m-mesh-points',
                 'source-layer': '100m-mesh-points-reach',
-                "maxzoom": 14,
                 "minzoom": 10,
+                "maxzoom": 15,
                 'type': 'circle',
                 'paint': {
                     'circle-color': meshPopulationColor,
@@ -617,86 +728,30 @@
                         11, 2,
                         12, 5,
                         13, 7,
-                        14, 12
+                        14, 12,
+                        14.5, 17,
+                        15, 20
                     ],
                     'circle-opacity': [
                         'interpolate',
                         ['linear'],
                         ['zoom'],
                         // zoom, opacity
-                        10, 0.2,
-                        11, 0.25,
-                        12, 0.3,
-                        13, 0.35,
-                        14, 0.4
+                        10, 0.25,
+                        11, 0.3,
+                        12, 0.35,
+                        13, 0.4,
+                        14, 0.5,
+                        14.5, 0.2,
+                        15, 0.1
                     ]
                 }
-            }, bottomLayerId);
-
-            map.addSource('100m-mesh-points-summary', {
-                'type': 'vector',
-                'url': 'mapbox://nehemiaharchive.100m-mesh-population-summary'
-            });
-
-            let meshPopulationSummaryPaintProperty = {
-                'circle-color': meshPopulationColor,
-                'circle-pitch-alignment': 'map',
-                'circle-radius': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    // zoom, radius
-                    6, 1,
-                    7, 1.2,
-                    8, 1.4,
-                    9, 1.6,
-                    10, 1.8,
-                    11, 2
-                ],
-                'circle-opacity': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    // zoom, opacity
-                    6, 0.1,
-                    7, 0.12,
-                    8, 0.14,
-                    9, 0.16,
-                    10, 0.18,
-                    11, 0.2
-                ]
-            };
-            map.addLayer({
-                'id': '100m-mesh-points-summary',
-                'source': '100m-mesh-points-summary',
-                'source-layer': '100m-mesh-population-summary',
-                "maxzoom": 10,
-                "minzoom": 6,
-                'type': 'circle',
-                'paint': meshPopulationSummaryPaintProperty
-            }, bottomLayerId);
-
-            map.addSource('100m-mesh-points-999', {
-                'type': 'vector',
-                'url': 'mapbox://nehemiaharchive.100m-mesh-population-999'
-            });
-
-            map.addLayer({
-                'id': '100m-mesh-points-999',
-                'source': '100m-mesh-points-999',
-                'source-layer': '100m-mesh-population-999',
-                "maxzoom": 11,
-                "minzoom": 7,
-                'type': 'circle',
-                'paint': meshPopulationSummaryPaintProperty
             }, bottomLayerId);
 
         } else {
             console.log("mesh layer found, setting layer paint properties for reach:" + reach);
             map.setPaintProperty('100m-mesh', 'fill-extrusion-color', meshPopulationColor);
             map.setPaintProperty('100m-mesh-points', 'circle-color', meshPopulationColor);
-            map.setPaintProperty('100m-mesh-points-summary', 'circle-color', meshPopulationColor);
-            map.setPaintProperty('100m-mesh-points-999', 'circle-color', meshPopulationColor);
         }
 
         console.log("renderMeshPopulation finished")
